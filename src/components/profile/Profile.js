@@ -5,14 +5,14 @@ function Profile() {
     let token = localStorage.getItem('token');
     let user = localStorage.getItem('user_id');
     let image_profile = "";
-    let usernameR, first_nameR,last_nameR,emailR;
+    let usernameR, first_nameR, last_nameR, emailR;
 
     const change_image = () => {
         let postData = new FormData();
         postData.append('id_user', user);
         postData.append('url_img', document.getElementById('img').files[0]);
 
-        axios.post("http://localhost:8000/api/v1/user/profile", postData, {
+        axios.post("http://localhost:8000/api/v1/profile/myprofile", postData, {
             headers: {
                 'Content-Type': 'multipart/form-data',
                 'Authorization': 'Token ' + token,
@@ -26,7 +26,7 @@ function Profile() {
             }).catch((error) => {
                 console.log(error.response.data);
                 if (error.response.data === "Metodo post no permitido") {
-                    console.log("Enviar a un metodo put");
+                    console.log("Error");
                     put_image();
                 }
             })
@@ -36,7 +36,7 @@ function Profile() {
         let putData = new FormData();
         putData.append('url_img', document.getElementById('img').files[0]);
 
-        axios.put("http://localhost:8000/api/v1/user/perfil/" + user + "/", putData, {
+        axios.put("http://localhost:8000/api/v1/profile/detailprofile/" + user + "/", putData, {
             headers: {
                 'Content-Type': 'multipart/form-data',
                 'Authorization': 'Token ' + token,
@@ -53,13 +53,13 @@ function Profile() {
     }
 
     let delete_image = () => {
-        axios.delete("http://localhost:8000/api/v1/user/perfil/" + user + "/", {
+        axios.delete("http://localhost:8000/api/v1/profile/detailprofile/" + user + "/", {
             headers: {
                 'Authorization': 'Token ' + token,
             }
         }).then((response) => {
             console.log(response.data);
-            alert("Imagen eliminada");
+            alert("image deleted");
             image_profile = "https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png";
             document.getElementById('preview').url = image_profile;
             window.location.reload();
@@ -67,7 +67,7 @@ function Profile() {
     }
 
     window.onload = function visualize_data() {
-        axios.get("http://localhost:8000/api/v1/user/perfil/" + user + "/", {
+        axios.get("http://localhost:8000/api/v1/profile/detailprofile/" + user + "/", {
             headers: {
                 'Authorization': 'Token ' + token,
             },
@@ -84,7 +84,7 @@ function Profile() {
                 document.getElementById('preview').src = "https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png";
             });
 
-        axios.get("http://localhost:8000/api/v1/user/data/"+user+"/",{
+        axios.get("http://localhost:8000/api/v1/profile/profiledata/"+user+"/",{
             headers:{
                 'Authorization': 'Token ' + token,
             },
@@ -104,29 +104,29 @@ function Profile() {
 
     let change_profile = () =>{
         let putData = new FormData();
-        let usernamePut = document.getElementById("username").value;
-        let lastNamePut = document.getElementById("lastName").value;
-        let firstNamePut = document.getElementById("firstName").value;
-        let emailPut = document.getElementById("email").value;
+        let usernameN = document.getElementById("username").value;
+        let lastNameN = document.getElementById("lastName").value;
+        let firstNameN = document.getElementById("firstName").value;
+        let emailN = document.getElementById("email").value;
 
-        if(usernamePut === ""){
-            usernamePut = usernameR; 
+        if(usernameN === ""){
+            usernameN = usernameR; 
         }
-        if(lastNamePut === ""){
-            lastNamePut = last_nameR;
+        if(lastNameN === ""){
+            lastNameN = last_nameR;
         }
-        if(firstNamePut === ""){
-            firstNamePut = first_nameR;
+        if(firstNameN === ""){
+            firstNameN = first_nameR;
         }
-        if(emailPut === ""){
-            emailPut = emailR;
+        if(emailN === ""){
+            emailN = emailR;
         }
-        putData.append("first_name",firstNamePut);
-        putData.append("last_name",lastNamePut);
-        putData.append("username",usernamePut);
-        putData.append("email",emailPut);
+        putData.append("first_name",firstNameN);
+        putData.append("last_name",lastNameN);
+        putData.append("username",usernameN);
+        putData.append("email",emailN);
 
-        axios.put("http://localhost:8000/api/v1/user/data/"+user+"/",putData,{
+        axios.put("http://localhost:8000/api/v1/profile/profiledata/"+user+"/",putData,{
             headers:{
                 'Content-Type': 'multipart/form-data',
                 'Authorization': 'Token ' + token,
@@ -145,7 +145,7 @@ function Profile() {
     const cerrar_sesion = () => {
         localStorage.clear();
         let putData = new FormData();
-        axios.put("http://localhost:8000/api/v1/user/data/"+user+"/",putData,{
+        axios.put("http://localhost:8000/api/v1/profile/profiledata/"+user+"/",putData,{
             headers:{
                 'Content-Type': 'multipart/form-data',
                 'Authorization': 'Token ' + token,
@@ -161,10 +161,10 @@ function Profile() {
     }
 
     return (
-        <div className= "Profile_body" >
-            <div className="Profile_container">
-                <div className="Profile_options">
-                       <h5>Bienvenido usurario no.{user }</h5>
+        <div className= "body" >
+            <div className="container">
+                <div className="welcome">
+                       <h5>Welcome user {user }</h5>
                 </div>
                 
                 <div className="Profile_profileImg">
@@ -174,31 +174,31 @@ function Profile() {
                 <div className="Profile_image">
                     <input accept="image/*" type="file" id="img"></input>
                 </div>
-                <div className="Profile_image">
+                <div className="Profile_img">
                     <p/>
                     <button onClick={change_image}>Cambiar imagen</button>
                     <p/>
                     <button onClick={delete_image}>Borrar la imagen</button>
                 </div>
-                <div className="Profile_profileInfo">
-                    <div className="Profile_profileField">
+                <div className="div-Info">
+                    <div className="div-datas">
                         <b>First name: </b><input id="firstName"></input>
                     </div>
-                    <div className="Profile_profileField">
+                    <div className="div-datas">
                         <b>Last name: </b><input id="lastName"></input>
                     </div>
-                    <div className="Profile_profileField">
+                    <div className="div-datas">
                         <b>Username: </b><input id="username"></input>
                     </div>
-                    <div className="Profile_profileField">
+                    <div className="div-datas">
                         <b>E-mail: </b><input id="email"></input>
                     </div>
                 </div>
-                <div className="Profile_update" onClick={change_profile}>
+                <div className="div-updt" onClick={change_profile}>
                     <button>Actualizar perfil</button>
                 </div>
-                <div className="Profile_backLogin">
-                    <button className="Profile_backLogin" onClick={cerrar_sesion}>Cerrar sesión</button>
+                <div className="div-logout">
+                    <button className="button-logout" onClick={cerrar_sesion}>Cerrar sesión</button>
                 </div>
                 
                 

@@ -3,6 +3,7 @@ import React, {Fragment, useState} from "react";
 import {BrowserRouter as Route, HashRouter} from "react-router-dom";
 import {BrowserRouter as Switch} from "react-router-dom";
 import Profile from "../profile/Profile";
+import "./Login.css";
 
 function App() {
 
@@ -45,7 +46,7 @@ function App() {
         localStorage.setItem('user_id', response.data.user_id);
         localStorage.setItem('token', response.data.token);
         console.log(response.data.token);
-        alert("Bienvenido "+ response.data.first_name);
+        alert("Welcome ");
         window.location="/Profile";
        })
       .catch((error) => {
@@ -61,27 +62,27 @@ function App() {
   return (
     <Fragment>
       <h1>Login</h1>
-      <form className="row" onSubmit={enviarDatos}>
-        <div className="col-md-3">
+      <form className="form-login" onSubmit={enviarDatos}>
+        <div className="div-form">
           <input
-            placeholder= "Ingrese el username"
-            className="form-control"
+            placeholder= "Usuario"
+            className="form-input"
             type="text"
             name="username"
             onChange={handleInputChange}
           ></input>
         </div>
-        <div className="col-md-3">
+        <div className="div-form">
           <input
-            placeholder="Ingrese password"
-            className="form-control"
+            placeholder="Contraseña"
+            className="form-input"
             type="text"
             name="password"
             onChange={handleInputChange}
           ></input>
         </div>
-        <div className="col-md-3">
-          <button onClick={consumir_login}>Enviar</button>
+        <div className="div-form">
+          <button onClick={consumir_login}>Ok</button>
         </div>
       </form>
     </Fragment>
